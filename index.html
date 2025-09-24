@@ -1,103 +1,156 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Snake Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Pong Game</title>
     <style>
         body {
+            margin: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            font-family: sans-serif;
-            margin-top: 20px;
+            height: 100vh;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
         }
         canvas {
-            border: 2px solid black;
+            border: 2px solid #fff;
+            display: block;
         }
         #score {
-            margin: 10px;
+            position: absolute;
+            top: 10px;
+            text-align: center;
+            width: 100%;
             font-size: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>Snake Game</h1>
-    <div id="score">Score: 0</div>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-
+    <div id="score">Player 1: 0 | Player 2: 0</div>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        const gridSize = 20;
-        const canvasSize = 400;
-        let snake = [{ x: 200, y: 200 }];
-        let dx = gridSize;
-        let dy = 0;
-        let food = { x: 0, y: 0 };
-        let score = 0;
+        const paddleWidth = 10;
+        const paddleHeight = 100;
+        const ballSize = 10;
 
-        // Place first food
-        placeFood();
+        let player1Score = 0;
+        let player2Score = 0;
 
-        document.addEventListener('keydown', changeDirection);
+        const paddle1 = { x: 0, y: canvas.height / 2 - paddleHeight / 2, speed: 5 };
+        const paddle2 = { x: canvas.width - paddleWidth, y: canvas.height / 2 - paddleHeight / 2, speed: 5 };
+        const ball = { x: canvas.width / 2, y: canvas.height / 2, dx: 4, dy: 4 };
 
-        function changeDirection(e) {
-            const key = e.key;
-            if (key === 'ArrowUp' && dy === 0) { dx = 0; dy = -gridSize; }
-            else if (key === 'ArrowDown' && dy === 0) { dx = 0; dy = gridSize; }
-            else if (key === 'ArrowLeft' && dx === 0) { dx = -gridSize; dy = 0; }
-            else if (key === 'ArrowRight' && dx === 0) { dx = gridSize; dy = 0; }
+        function drawRect(x, y, width, height, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, width, height);
         }
+
+        function drawBall(x, y, size, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `Player 1: ${player1Score} | Player 2: ${player2Score}`;
+        }
+
+        function resetBall() {
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height / 2;
+            ball.dx = -ball.dx;
+        }
+
+        function update() {
+            // Ball movement
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // Ball collision with top and bottom walls
+            if (ball.y <= 0 || ball.y >= canvas.height) {
+                ball.dy = -ball.dy;
+            }
+
+            // Ball collision with paddles
+            if (
+                ball.x <= paddle1.x + paddleWidth &&
+                ball.y >= paddle1.y &&
+                ball.y <= paddle1.y + paddleHeight
+            ) {
+                ball.dx = -ball.dx;
+            }
+
+            if (
+                ball.x >= paddle2.x - ballSize &&
+                ball.y >= paddle2.y &&
+                ball.y <= paddle2.y + paddleHeight
+            ) {
+                ball.dx = -ball.dx;
+            }
+
+            // Ball out of bounds
+            if (ball.x <= 0) {
+                player2Score++;
+                updateScore();
+                resetBall();
+            }
+
+            if (ball.x >= canvas.width) {
+                player1Score++;
+                updateScore();
+                resetBall();
+            }
+
+            // Paddle movement
+            if (keys['ArrowUp'] && paddle2.y > 0) {
+                paddle2.y -= paddle2.speed;
+            }
+            if (keys['ArrowDown'] && paddle2.y < canvas.height - paddleHeight) {
+                paddle2.y += paddle2.speed;
+            }
+            if (keys['w'] && paddle1.y > 0) {
+                paddle1.y -= paddle1.speed;
+            }
+            if (keys['s'] && paddle1.y < canvas.height - paddleHeight) {
+                paddle1.y += paddle1.speed;
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw paddles
+            drawRect(paddle1.x, paddle1.y, paddleWidth, paddleHeight, '#fff');
+            drawRect(paddle2.x, paddle2.y, paddleWidth, paddleHeight, '#fff');
+
+            // Draw ball
+            drawBall(ball.x, ball.y, ballSize, '#fff');
+        }
+
+        const keys = {};
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
 
         function gameLoop() {
-            // Move snake
-            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
-
-            // Check collisions
-            if (head.x < 0 || head.x >= canvasSize || head.y < 0 || head.y >= canvasSize || collision(head, snake)) {
-                alert("Game Over! Score: " + score);
-                document.location.reload();
-                return;
-            }
-
-            snake.unshift(head);
-
-            // Check if food eaten
-            if (head.x === food.x && head.y === food.y) {
-                score++;
-                document.getElementById('score').innerText = "Score: " + score;
-                placeFood();
-            } else {
-                snake.pop(); // remove tail if no food eaten
-            }
-
-            // Draw everything
-            ctx.clearRect(0, 0, canvasSize, canvasSize);
-
-            // Draw food
-            ctx.fillStyle = 'red';
-            ctx.fillRect(food.x, food.y, gridSize, gridSize);
-
-            // Draw snake
-            ctx.fillStyle = 'green';
-            snake.forEach(segment => ctx.fillRect(segment.x, segment.y, gridSize, gridSize));
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
         }
 
-        function collision(head, array) {
-            for (let i = 0; i < array.length; i++) {
-                if (head.x === array[i].x && head.y === array[i].y) return true;
-            }
-            return false;
-        }
-
-        function placeFood() {
-            food.x = Math.floor(Math.random() * (canvasSize / gridSize)) * gridSize;
-            food.y = Math.floor(Math.random() * (canvasSize / gridSize)) * gridSize;
-        }
-
-        // Run the game loop every 150ms
-        setInterval(gameLoop, 150);
+        gameLoop();
     </script>
 </body>
 </html>
+```

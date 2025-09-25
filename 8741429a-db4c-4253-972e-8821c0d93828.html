@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake and Ladder Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(10, 50px);
+            grid-template-rows: repeat(10, 50px);
+            gap: 1px;
+        }
+        .cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+        .player {
+            background-color: red;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+        }
+        #controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #dice {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-board"></div>
+    <div id="controls">
+        <div id="dice">Roll: <span id="dice-result">0</span></div>
+        <button onclick="rollDice()">Roll Dice</button>
+    </div>
+    <script>
+        const boardSize = 10;
+        const snakes = { 16: 6, 47: 26, 49: 11, 56: 53, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 78 };
+        const ladders = { 1: 38, 4: 14, 9: 31, 21: 42, 28: 84, 36: 44, 51: 67, 71: 91, 80: 100 };
+        let playerPosition = 1;
+
+        function createBoard() {
+            const board = document.getElementById('game-board');
+            for (let i = 1; i <= boardSize * boardSize; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.id = 'cell-' + i;
+                cell.textContent = i;
+                board.appendChild(cell);
+            }
+            updatePlayerPosition();
+        }
+
+        function rollDice() {
+            const diceResult = Math.floor(Math.random() * 6) + 1;
+            document.getElementById('dice-result').textContent = diceResult;
+            movePlayer(diceResult);
+        }
+
+        function movePlayer(steps) {
+            playerPosition += steps;
+            if (playerPosition > 100) {
+                playerPosition = 100;
+            }
+            if (snakes[playerPosition]) {
+                playerPosition = snakes[playerPosition];
+            } else if (ladders[playerPosition]) {
+                playerPosition = ladders[playerPosition];
+            }
+            updatePlayerPosition();
+        }
+
+        function updatePlayerPosition() {
+            document.querySelectorAll('.cell').forEach(cell => cell.innerHTML = cell.textContent);
+            const playerCell = document.getElementById('cell-' + playerPosition);
+            const playerDiv = document.createElement('div');
+            playerDiv.className = 'player';
+            playerCell.appendChild(playerDiv);
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>

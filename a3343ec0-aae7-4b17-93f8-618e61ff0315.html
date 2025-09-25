@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 5px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Employee Management System</h1>
+    <form id="employeeForm">
+        <input type="hidden" id="employeeId">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" required><br>
+        <label for="department">Department:</label><br>
+        <input type="text" id="department" required><br>
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" required><br>
+        <button type="submit">Add Employee</button>
+        <button type="button" id="updateButton" style="display:none;">Update Employee</button>
+    </form>
+    <table id="employeeTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <script>
+        let employees = [];
+        let currentId = 1;
+
+        document.getElementById('employeeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const department = document.getElementById('department').value;
+            const address = document.getElementById('address').value;
+
+            const employee = {
+                id: currentId++,
+                name,
+                department,
+                address
+            };
+
+            employees.push(employee);
+            document.getElementById('employeeForm').reset();
+            renderTable();
+        });
+
+        document.getElementById('updateButton').addEventListener('click', function() {
+            const id = document.getElementById('employeeId').value;
+            const name = document.getElementById('name').value;
+            const department = document.getElementById('department').value;
+            const address = document.getElementById('address').value;
+
+            const employee = employees.find(emp => emp.id == id);
+            employee.name = name;
+            employee.department = department;
+            employee.address = address;
+
+            document.getElementById('employeeForm').reset();
+            document.getElementById('updateButton').style.display = 'none';
+            document.querySelector('button[type="submit"]').style.display = 'inline';
+            renderTable();
+        });
+
+        function renderTable() {
+            const tbody = document.querySelector('#employeeTable tbody');
+            tbody.innerHTML = '';
+
+            employees.forEach(employee => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${employee.id}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.department}</td>
+                    <td>${employee.address}</td>
+                    <td>
+                        <button onclick="editEmployee(${employee.id})">Edit</button>
+                        <button onclick="deleteEmployee(${employee.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function editEmployee(id) {
+            const employee = employees.find(emp => emp.id == id);
+            document.getElementById('employeeId').value = employee.id;
+            document.getElementById('name').value = employee.name;
+            document.getElementById('department').value = employee.department;
+            document.getElementById('address').value = employee.address;
+
+            document.querySelector('button[type="submit"]').style.display = 'none';
+            document.getElementById('updateButton').style.display = 'inline';
+        }
+
+        function deleteEmployee(id) {
+            employees = employees.filter(emp => emp.id != id);
+            renderTable();
+        }
+    </script>
+</body>
+</html>

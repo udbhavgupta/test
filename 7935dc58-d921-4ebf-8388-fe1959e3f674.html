@@ -1,0 +1,40 @@
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .dice {
+            font-size: 100px;
+        }
+        .button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .result {
+            font-size: 30px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dice" id="dice">🎲</div>
+    <button class="button" onclick="rollDice()">Roll Dice</button>
+    <div class="result" id="result"></div>
+
+    <script>
+        function rollDice() {
+            const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+            const randomIndex = Math.floor(Math.random() * diceFaces.length);
+            const dice = document.getElementById('dice');
+            const result = document.getElementById('result');
+            dice.innerHTML = diceFaces[randomIndex];
+            result.innerHTML = `You rolled a ${randomIndex + 1}`;
+        }
+    </script>
+</body>
+</html>

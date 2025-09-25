@@ -1,0 +1,136 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Pong Game</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="pongCanvas" width="800" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('pongCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const paddleWidth = 10;
+        const paddleHeight = 100;
+        const ballRadius = 10;
+
+        let player1Y = canvas.height / 2 - paddleHeight / 2;
+        let player2Y = canvas.height / 2 - paddleHeight / 2;
+        let ballX = canvas.width / 2;
+        let ballY = canvas.height / 2;
+        let ballSpeedX = 4;
+        let ballSpeedY = 4;
+
+        const playerSpeed = 6;
+
+        function drawRect(x, y, width, height, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, width, height);
+        }
+
+        function drawCircle(x, y, radius, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawNet() {
+            for (let i = 0; i < canvas.height; i += 20) {
+                drawRect(canvas.width / 2 - 1, i, 2, 10, 'white');
+            }
+        }
+
+        function updateBall() {
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+
+            if (ballY - ballRadius < 0 || ballY + ballRadius > canvas.height) {
+                ballSpeedY = -ballSpeedY;
+            }
+
+            if (ballX - ballRadius < paddleWidth) {
+                if (ballY > player1Y && ballY < player1Y + paddleHeight) {
+                    ballSpeedX = -ballSpeedX;
+                } else {
+                    resetBall();
+                }
+            }
+
+            if (ballX + ballRadius > canvas.width - paddleWidth) {
+                if (ballY > player2Y && ballY < player2Y + paddleHeight) {
+                    ballSpeedX = -ballSpeedX;
+                } else {
+                    resetBall();
+                }
+            }
+        }
+
+        function resetBall() {
+            ballX = canvas.width / 2;
+            ballY = canvas.height / 2;
+            ballSpeedX = -ballSpeedX;
+            ballSpeedY = 4;
+        }
+
+        function updatePlayer1(direction) {
+            if (direction === 'up' && player1Y > 0) {
+                player1Y -= playerSpeed;
+            }
+            if (direction === 'down' && player1Y < canvas.height - paddleHeight) {
+                player1Y += playerSpeed;
+            }
+        }
+
+        function updatePlayer2(direction) {
+            if (direction === 'up' && player2Y > 0) {
+                player2Y -= playerSpeed;
+            }
+            if (direction === 'down' && player2Y < canvas.height - paddleHeight) {
+                player2Y += playerSpeed;
+            }
+        }
+
+        function draw() {
+            drawRect(0, 0, canvas.width, canvas.height, 'black');
+            drawNet();
+            drawRect(0, player1Y, paddleWidth, paddleHeight, 'white');
+            drawRect(canvas.width - paddleWidth, player2Y, paddleWidth, paddleHeight, 'white');
+            drawCircle(ballX, ballY, ballRadius, 'white');
+        }
+
+        function gameLoop() {
+            updateBall();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'w') updatePlayer1('up');
+            if (e.key === 's') updatePlayer1('down');
+            if (e.key === 'ArrowUp') updatePlayer2('up');
+            if (e.key === 'ArrowDown') updatePlayer2('down');
+        });
+
+        gameLoop();
+    </script>
+</body>
+</html>
+```

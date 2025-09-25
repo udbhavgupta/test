@@ -1,0 +1,162 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Pong Game</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid #fff;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">Player: 0 | AI: 0</div>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const paddleWidth = 10;
+        const paddleHeight = 100;
+        const ballSize = 10;
+
+        let playerScore = 0;
+        let aiScore = 0;
+
+        const playerPaddle = {
+            x: 10,
+            y: canvas.height / 2 - paddleHeight / 2,
+            width: paddleWidth,
+            height: paddleHeight,
+            speed: 5
+        };
+
+        const aiPaddle = {
+            x: canvas.width - 20,
+            y: canvas.height / 2 - paddleHeight / 2,
+            width: paddleWidth,
+            height: paddleHeight,
+            speed: 3
+        };
+
+        const ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            size: ballSize,
+            speedX: 4,
+            speedY: 4
+        };
+
+        function drawRect(x, y, width, height, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, width, height);
+        }
+
+        function drawBall(x, y, size, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `Player: ${playerScore} | AI: ${aiScore}`;
+        }
+
+        function movePlayerPaddle(event) {
+            if (event.key === 'ArrowUp' && playerPaddle.y > 0) {
+                playerPaddle.y -= playerPaddle.speed;
+            } else if (event.key === 'ArrowDown' && playerPaddle.y + paddleHeight < canvas.height) {
+                playerPaddle.y += playerPaddle.speed;
+            }
+        }
+
+        function moveAiPaddle() {
+            if (ball.y < aiPaddle.y + paddleHeight / 2) {
+                aiPaddle.y -= aiPaddle.speed;
+            } else if (ball.y > aiPaddle.y + paddleHeight / 2) {
+                aiPaddle.y += aiPaddle.speed;
+            }
+        }
+
+        function moveBall() {
+            ball.x += ball.speedX;
+            ball.y += ball.speedY;
+
+            if (ball.y <= 0 || ball.y >= canvas.height) {
+                ball.speedY *= -1;
+            }
+
+            if (
+                ball.x <= playerPaddle.x + paddleWidth &&
+                ball.y >= playerPaddle.y &&
+                ball.y <= playerPaddle.y + paddleHeight
+            ) {
+                ball.speedX *= -1;
+            }
+
+            if (
+                ball.x >= aiPaddle.x - ballSize &&
+                ball.y >= aiPaddle.y &&
+                ball.y <= aiPaddle.y + paddleHeight
+            ) {
+                ball.speedX *= -1;
+            }
+
+            if (ball.x <= 0) {
+                aiScore++;
+                resetBall();
+            }
+
+            if (ball.x >= canvas.width) {
+                playerScore++;
+                resetBall();
+            }
+        }
+
+        function resetBall() {
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height / 2;
+            ball.speedX *= -1;
+            updateScore();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawRect(playerPaddle.x, playerPaddle.y, playerPaddle.width, playerPaddle.height, '#fff');
+            drawRect(aiPaddle.x, aiPaddle.y, aiPaddle.width, aiPaddle.height, '#fff');
+            drawBall(ball.x, ball.y, ball.size, '#fff');
+        }
+
+        function gameLoop() {
+            moveBall();
+            moveAiPaddle();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener('keydown', movePlayerPaddle);
+        updateScore();
+        gameLoop();
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,119 @@
+<html>
+<head>
+    <title>Invoice Processing System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group label {
+            display: block;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+        }
+        .form-group button {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Invoice Processing System</h1>
+    <div class="form-group">
+        <label for="invoiceName">Invoice Name:</label>
+        <input type="text" id="invoiceName">
+    </div>
+    <div class="form-group">
+        <label for="invoiceNumber">Invoice Number:</label>
+        <input type="text" id="invoiceNumber">
+    </div>
+    <div class="form-group">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount">
+    </div>
+    <div class="form-group">
+        <button onclick="addInvoice()">Add Invoice</button>
+    </div>
+    <table id="invoiceTable">
+        <thead>
+            <tr>
+                <th>Invoice Name</th>
+                <th>Invoice Number</th>
+                <th>Amount</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        function addInvoice() {
+            const invoiceName = document.getElementById('invoiceName').value;
+            const invoiceNumber = document.getElementById('invoiceNumber').value;
+            const amount = document.getElementById('amount').value;
+
+            if (invoiceName && invoiceNumber && amount) {
+                const table = document.getElementById('invoiceTable').getElementsByTagName('tbody')[0];
+                const newRow = table.insertRow();
+
+                const nameCell = newRow.insertCell(0);
+                const numberCell = newRow.insertCell(1);
+                const amountCell = newRow.insertCell(2);
+                const actionsCell = newRow.insertCell(3);
+
+                nameCell.innerHTML = invoiceName;
+                numberCell.innerHTML = invoiceNumber;
+                amountCell.innerHTML = amount;
+                actionsCell.innerHTML = '<button onclick="editInvoice(this)">Edit</button> <button onclick="deleteInvoice(this)">Delete</button>';
+
+                document.getElementById('invoiceName').value = '';
+                document.getElementById('invoiceNumber').value = '';
+                document.getElementById('amount').value = '';
+            } else {
+                alert('Please fill out all fields.');
+            }
+        }
+
+        function editInvoice(button) {
+            const row = button.parentNode.parentNode;
+            const nameCell = row.cells[0];
+            const numberCell = row.cells[1];
+            const amountCell = row.cells[2];
+
+            const invoiceName = prompt('Enter new invoice name:', nameCell.innerHTML);
+            const invoiceNumber = prompt('Enter new invoice number:', numberCell.innerHTML);
+            const amount = prompt('Enter new amount:', amountCell.innerHTML);
+
+            if (invoiceName && invoiceNumber && amount) {
+                nameCell.innerHTML = invoiceName;
+                numberCell.innerHTML = invoiceNumber;
+                amountCell.innerHTML = amount;
+            } else {
+                alert('Please fill out all fields.');
+            }
+        }
+
+        function deleteInvoice(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+    </script>
+</body>
+</html>

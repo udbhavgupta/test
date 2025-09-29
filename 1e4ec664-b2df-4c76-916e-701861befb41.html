@@ -1,0 +1,144 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Onboarding System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .edit-btn {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Employee Onboarding System</h1>
+    <form id="employeeForm">
+        <label for="name">Employee Name:</label>
+        <input type="text" id="name" required>
+        
+        <label for="number">Employee Number:</label>
+        <input type="text" id="number" required>
+        
+        <label for="project">Project:</label>
+        <input type="text" id="project" required>
+        
+        <label for="hr">HR:</label>
+        <input type="text" id="hr" required>
+        
+        <label for="manager">Project Manager:</label>
+        <input type="text" id="manager" required>
+        
+        <button type="submit">Add Employee</button>
+    </form>
+    
+    <table id="employeeTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Number</th>
+                <th>Project</th>
+                <th>HR</th>
+                <th>Project Manager</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        const employeeForm = document.getElementById('employeeForm');
+        const employeeTable = document.getElementById('employeeTable').querySelector('tbody');
+
+        let employees = [];
+
+        employeeForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const number = document.getElementById('number').value;
+            const project = document.getElementById('project').value;
+            const hr = document.getElementById('hr').value;
+            const manager = document.getElementById('manager').value;
+
+            const employee = { name, number, project, hr, manager };
+            employees.push(employee);
+
+            renderTable();
+            employeeForm.reset();
+        });
+
+        function renderTable() {
+            employeeTable.innerHTML = '';
+            employees.forEach((employee, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${employee.name}</td>
+                    <td>${employee.number}</td>
+                    <td>${employee.project}</td>
+                    <td>${employee.hr}</td>
+                    <td>${employee.manager}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editEmployee(${index})">Edit</button>
+                    </td>
+                `;
+                employeeTable.appendChild(row);
+            });
+        }
+
+        function editEmployee(index) {
+            const employee = employees[index];
+
+            document.getElementById('name').value = employee.name;
+            document.getElementById('number').value = employee.number;
+            document.getElementById('project').value = employee.project;
+            document.getElementById('hr').value = employee.hr;
+            document.getElementById('manager').value = employee.manager;
+
+            employees.splice(index, 1);
+            renderTable();
+        }
+    </script>
+</body>
+</html>
+```

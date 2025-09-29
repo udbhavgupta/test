@@ -1,0 +1,129 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Session Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .session-list {
+            margin-top: 20px;
+        }
+        .session-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .session-item span {
+            font-weight: bold;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #a71d2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Session Manager</h1>
+        <div class="form-group">
+            <label for="username">Enter Username:</label>
+            <input type="text" id="username" placeholder="Enter username">
+        </div>
+        <button id="addSessionBtn">Add Session</button>
+        <div class="session-list" id="sessionList"></div>
+    </div>
+    <script>
+        const addSessionBtn = document.getElementById('addSessionBtn');
+        const usernameInput = document.getElementById('username');
+        const sessionList = document.getElementById('sessionList');
+
+        // Function to add a new session
+        function addSession() {
+            const username = usernameInput.value.trim();
+            if (username === '') {
+                alert('Please enter a username.');
+                return;
+            }
+
+            const sessionId = Date.now(); // Unique session ID
+            const sessionItem = document.createElement('div');
+            sessionItem.className = 'session-item';
+            sessionItem.dataset.sessionId = sessionId;
+
+            sessionItem.innerHTML = `
+                <span>${username}</span>
+                <button class="delete-btn" onclick="deleteSession(${sessionId})">Delete</button>
+            `;
+
+            sessionList.appendChild(sessionItem);
+            usernameInput.value = '';
+        }
+
+        // Function to delete a session
+        function deleteSession(sessionId) {
+            const sessionItem = document.querySelector(`.session-item[data-session-id="${sessionId}"]`);
+            if (sessionItem) {
+                sessionList.removeChild(sessionItem);
+            }
+        }
+
+        // Event listener for adding sessions
+        addSessionBtn.addEventListener('click', addSession);
+    </script>
+</body>
+</html>
+```

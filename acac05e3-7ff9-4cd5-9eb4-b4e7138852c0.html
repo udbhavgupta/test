@@ -1,0 +1,52 @@
+<html>
+<head>
+    <title>Language Translation API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #translationForm {
+            margin-bottom: 20px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Language Translation API</h1>
+    <form id="translationForm">
+        <label for="text">Text to Translate:</label><br>
+        <textarea id="text" rows="4" cols="50"></textarea><br><br>
+        <label for="language">Target Language:</label><br>
+        <input type="text" id="language"><br><br>
+        <button type="button" onclick="translateText()">Translate</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        async function translateText() {
+            const text = document.getElementById('text').value;
+            const language = document.getElementById('language').value;
+
+            if (!text || !language) {
+                alert('Please enter both text and target language.');
+                return;
+            }
+
+            const response = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + encodeURIComponent('en|' + language));
+            const data = await response.json();
+
+            if (data.responseData.translatedText) {
+                document.getElementById('result').innerText = 'Translated Text: ' + data.responseData.translatedText;
+            } else {
+                document.getElementById('result').innerText = 'Translation failed. Please try again.';
+            }
+        }
+    </script>
+</body>
+</html>

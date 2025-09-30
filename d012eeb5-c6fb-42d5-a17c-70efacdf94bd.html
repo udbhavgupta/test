@@ -1,0 +1,147 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Processing System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, textarea, select, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .edit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Invoice Processing System</h1>
+    <form id="invoiceForm">
+        <label for="department">Department Name:</label>
+        <input type="text" id="department" required>
+        
+        <label for="vendor">Vendor Name:</label>
+        <input type="text" id="vendor" required>
+        
+        <label for="details">Invoice Details:</label>
+        <textarea id="details" rows="4" required></textarea>
+        
+        <button type="submit">Add/Update Invoice</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Department</th>
+                <th>Vendor</th>
+                <th>Invoice Details</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="invoiceTableBody">
+        </tbody>
+    </table>
+
+    <script>
+        const form = document.getElementById('invoiceForm');
+        const departmentInput = document.getElementById('department');
+        const vendorInput = document.getElementById('vendor');
+        const detailsInput = document.getElementById('details');
+        const tableBody = document.getElementById('invoiceTableBody');
+        let editIndex = null;
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const department = departmentInput.value.trim();
+            const vendor = vendorInput.value.trim();
+            const details = detailsInput.value.trim();
+
+            if (editIndex === null) {
+                addInvoice(department, vendor, details);
+            } else {
+                updateInvoice(editIndex, department, vendor, details);
+            }
+
+            resetForm();
+        });
+
+        function addInvoice(department, vendor, details) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${department}</td>
+                <td>${vendor}</td>
+                <td>${details}</td>
+                <td>
+                    <button class="edit-btn" onclick="editInvoice(this)">Edit</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        }
+
+        function updateInvoice(index, department, vendor, details) {
+            const rows = tableBody.getElementsByTagName('tr');
+            rows[index].cells[0].textContent = department;
+            rows[index].cells[1].textContent = vendor;
+            rows[index].cells[2].textContent = details;
+            editIndex = null;
+        }
+
+        function editInvoice(button) {
+            const row = button.parentElement.parentElement;
+            const index = Array.from(tableBody.children).indexOf(row);
+            editIndex = index;
+
+            departmentInput.value = row.cells[0].textContent;
+            vendorInput.value = row.cells[1].textContent;
+            detailsInput.value = row.cells[2].textContent;
+        }
+
+        function resetForm() {
+            departmentInput.value = '';
+            vendorInput.value = '';
+            detailsInput.value = '';
+            editIndex = null;
+        }
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,34 @@
+I can only provide HTML and JavaScript code. Here is an HTML file that generates random numbers using JavaScript:
+
+<html>
+<head>
+    <title>Random Number Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #result {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random Number Generator</h1>
+    <button onclick="generateRandomNumber()">Generate Random Number</button>
+    <div id="result"></div>
+
+    <script>
+        function generateRandomNumber() {
+            var randomNumber = Math.floor(Math.random() * 100) + 1;
+            document.getElementById('result').innerText = randomNumber;
+        }
+    </script>
+</body>
+</html>

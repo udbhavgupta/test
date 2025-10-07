@@ -1,0 +1,198 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        form div {
+            margin-bottom: 15px;
+        }
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        form input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        form button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .action-buttons button {
+            margin-right: 5px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-btn {
+            background-color: #ffa500;
+            color: white;
+        }
+        .edit-btn:hover {
+            background-color: #e69500;
+        }
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+        .update-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .update-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>Employee Management System</header>
+    <main>
+        <form id="employeeForm">
+            <div>
+                <label for="name">Employee Name</label>
+                <input type="text" id="name" required>
+            </div>
+            <div>
+                <label for="id">Employee ID</label>
+                <input type="text" id="id" required>
+            </div>
+            <div>
+                <label for="department">Department</label>
+                <input type="text" id="department" required>
+            </div>
+            <div>
+                <label for="address">Address</label>
+                <input type="text" id="address" required>
+            </div>
+            <button type="submit">Add</button>
+        </form>
+        <table id="employeeTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Department</th>
+                    <th>Address</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </main>
+    <script>
+        const employeeForm = document.getElementById('employeeForm');
+        const employeeTable = document.getElementById('employeeTable').querySelector('tbody');
+        let editingRow = null;
+
+        employeeForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const id = document.getElementById('id').value;
+            const department = document.getElementById('department').value;
+            const address = document.getElementById('address').value;
+
+            if (editingRow) {
+                editingRow.cells[0].textContent = name;
+                editingRow.cells[1].textContent = id;
+                editingRow.cells[2].textContent = department;
+                editingRow.cells[3].textContent = address;
+                editingRow = null;
+                employeeForm.reset();
+                return;
+            }
+
+            const row = employeeTable.insertRow();
+            row.innerHTML = `
+                <td>${name}</td>
+                <td>${id}</td>
+                <td>${department}</td>
+                <td>${address}</td>
+                <td class="action-buttons">
+                    <button class="edit-btn" onclick="editEmployee(this)">Edit</button>
+                    <button class="delete-btn" onclick="deleteEmployee(this)">Delete</button>
+                </td>
+            `;
+            employeeForm.reset();
+        });
+
+        function editEmployee(button) {
+            const row = button.parentElement.parentElement;
+            editingRow = row;
+            document.getElementById('name').value = row.cells[0].textContent;
+            document.getElementById('id').value = row.cells[1].textContent;
+            document.getElementById('department').value = row.cells[2].textContent;
+            document.getElementById('address').value = row.cells[3].textContent;
+        }
+
+        function deleteEmployee(button) {
+            const row = button.parentElement.parentElement;
+            employeeTable.deleteRow(row.rowIndex - 1);
+        }
+    </script>
+</body>
+</html>
+```

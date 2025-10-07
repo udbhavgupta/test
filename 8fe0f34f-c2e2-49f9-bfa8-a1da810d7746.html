@@ -1,0 +1,199 @@
+<html>
+<head>
+    <title>Employee Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            background-color: #0078d7;
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group button {
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #005fa3;
+        }
+        .employee-list {
+            margin-top: 20px;
+        }
+        .employee-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .employee-item:last-child {
+            border-bottom: none;
+        }
+        .employee-item span {
+            flex: 1;
+        }
+        .employee-item button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-btn {
+            background-color: #ffc107;
+            color: white;
+        }
+        .edit-btn:hover {
+            background-color: #e0a800;
+        }
+        .update-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .update-btn:hover {
+            background-color: #218838;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Employee Management System</h1>
+    <div class="container">
+        <div class="form-group">
+            <label for="employeeName">Employee Name</label>
+            <input type="text" id="employeeName" placeholder="Enter employee name">
+        </div>
+        <div class="form-group">
+            <label for="employeeId">Employee ID</label>
+            <input type="text" id="employeeId" placeholder="Enter employee ID">
+        </div>
+        <div class="form-group">
+            <label for="department">Department</label>
+            <input type="text" id="department" placeholder="Enter department">
+        </div>
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" placeholder="Enter address">
+        </div>
+        <div class="form-group">
+            <button id="addEmployee">Add Employee</button>
+        </div>
+        <div class="employee-list" id="employeeList"></div>
+    </div>
+    <script>
+        const employeeList = document.getElementById('employeeList');
+        const addEmployeeButton = document.getElementById('addEmployee');
+
+        addEmployeeButton.addEventListener('click', () => {
+            const name = document.getElementById('employeeName').value.trim();
+            const id = document.getElementById('employeeId').value.trim();
+            const department = document.getElementById('department').value.trim();
+            const address = document.getElementById('address').value.trim();
+
+            if (name && id && department && address) {
+                const employeeItem = document.createElement('div');
+                employeeItem.className = 'employee-item';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = name;
+
+                const idSpan = document.createElement('span');
+                idSpan.textContent = id;
+
+                const departmentSpan = document.createElement('span');
+                departmentSpan.textContent = department;
+
+                const addressSpan = document.createElement('span');
+                addressSpan.textContent = address;
+
+                const editButton = document.createElement('button');
+                editButton.className = 'edit-btn';
+                editButton.textContent = 'Edit';
+                editButton.addEventListener('click', () => {
+                    nameSpan.contentEditable = true;
+                    idSpan.contentEditable = true;
+                    departmentSpan.contentEditable = true;
+                    addressSpan.contentEditable = true;
+                    editButton.style.display = 'none';
+                    updateButton.style.display = 'inline-block';
+                });
+
+                const updateButton = document.createElement('button');
+                updateButton.className = 'update-btn';
+                updateButton.textContent = 'Update';
+                updateButton.style.display = 'none';
+                updateButton.addEventListener('click', () => {
+                    nameSpan.contentEditable = false;
+                    idSpan.contentEditable = false;
+                    departmentSpan.contentEditable = false;
+                    addressSpan.contentEditable = false;
+                    editButton.style.display = 'inline-block';
+                    updateButton.style.display = 'none';
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'delete-btn';
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', () => {
+                    employeeList.removeChild(employeeItem);
+                });
+
+                employeeItem.appendChild(nameSpan);
+                employeeItem.appendChild(idSpan);
+                employeeItem.appendChild(departmentSpan);
+                employeeItem.appendChild(addressSpan);
+                employeeItem.appendChild(editButton);
+                employeeItem.appendChild(updateButton);
+                employeeItem.appendChild(deleteButton);
+
+                employeeList.appendChild(employeeItem);
+
+                document.getElementById('employeeName').value = '';
+                document.getElementById('employeeId').value = '';
+                document.getElementById('department').value = '';
+                document.getElementById('address').value = '';
+            } else {
+                alert('Please fill out all fields.');
+            }
+        });
+    </script>
+</body>
+</html>

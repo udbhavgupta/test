@@ -1,0 +1,160 @@
+<html>
+<head>
+    <title>Employee Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        form input {
+            width: calc(50% - 10px);
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        form button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #218838;
+        }
+        .employee-list {
+            margin-top: 20px;
+        }
+        .employee-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+        .employee-item input {
+            width: 20%;
+            padding: 5px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .employee-item button {
+            padding: 5px 10px;
+            margin-left: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-btn {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+        .update-btn {
+            background-color: #ffc107;
+            color: #fff;
+        }
+        .update-btn:hover {
+            background-color: #e0a800;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Employee Management System</h1>
+        <form id="employeeForm">
+            <input type="text" id="employeeName" placeholder="Employee Name" required>
+            <input type="text" id="employeeID" placeholder="Employee ID" required>
+            <input type="text" id="department" placeholder="Department" required>
+            <input type="text" id="address" placeholder="Address" required>
+            <button type="button" onclick="addEmployee()">Add</button>
+        </form>
+        <div class="employee-list" id="employeeList"></div>
+    </div>
+    <script>
+        const employeeList = document.getElementById('employeeList');
+
+        function addEmployee() {
+            const name = document.getElementById('employeeName').value;
+            const id = document.getElementById('employeeID').value;
+            const department = document.getElementById('department').value;
+            const address = document.getElementById('address').value;
+
+            if (name && id && department && address) {
+                const employeeItem = document.createElement('div');
+                employeeItem.className = 'employee-item';
+
+                employeeItem.innerHTML = `
+                    <input type="text" value="${name}" disabled>
+                    <input type="text" value="${id}" disabled>
+                    <input type="text" value="${department}" disabled>
+                    <input type="text" value="${address}" disabled>
+                    <button class="edit-btn" onclick="editEmployee(this)">Edit</button>
+                    <button class="update-btn" onclick="updateEmployee(this)" style="display:none;">Update</button>
+                    <button class="delete-btn" onclick="deleteEmployee(this)">Delete</button>
+                `;
+
+                employeeList.appendChild(employeeItem);
+
+                document.getElementById('employeeForm').reset();
+            } else {
+                alert('Please fill out all fields.');
+            }
+        }
+
+        function editEmployee(button) {
+            const employeeItem = button.parentElement;
+            const inputs = employeeItem.querySelectorAll('input');
+            inputs.forEach(input => input.disabled = false);
+            button.style.display = 'none';
+            employeeItem.querySelector('.update-btn').style.display = 'inline-block';
+        }
+
+        function updateEmployee(button) {
+            const employeeItem = button.parentElement;
+            const inputs = employeeItem.querySelectorAll('input');
+            inputs.forEach(input => input.disabled = true);
+            button.style.display = 'none';
+            employeeItem.querySelector('.edit-btn').style.display = 'inline-block';
+        }
+
+        function deleteEmployee(button) {
+            const employeeItem = button.parentElement;
+            employeeList.removeChild(employeeItem);
+        }
+    </script>
+</body>
+</html>

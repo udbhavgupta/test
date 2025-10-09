@@ -1,0 +1,154 @@
+<html>
+<head>
+    <title>Employee Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .employee-list {
+            margin-top: 20px;
+        }
+        .employee-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+        .employee-item input[type="text"] {
+            margin-right: 10px;
+        }
+        .employee-item button {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Employee Management System</h1>
+        <form id="employeeForm">
+            <input type="text" id="employeeName" placeholder="Employee Name" required>
+            <input type="text" id="employeeID" placeholder="Employee ID" required>
+            <input type="text" id="department" placeholder="Department" required>
+            <input type="text" id="address" placeholder="Address" required>
+            <button type="button" id="addEmployee">Add</button>
+        </form>
+        <div class="employee-list" id="employeeList"></div>
+    </div>
+    <script>
+        const employeeForm = document.getElementById('employeeForm');
+        const employeeList = document.getElementById('employeeList');
+        const addEmployeeButton = document.getElementById('addEmployee');
+
+        addEmployeeButton.addEventListener('click', () => {
+            const name = document.getElementById('employeeName').value.trim();
+            const id = document.getElementById('employeeID').value.trim();
+            const department = document.getElementById('department').value.trim();
+            const address = document.getElementById('address').value.trim();
+
+            if (name && id && department && address) {
+                const employeeItem = document.createElement('div');
+                employeeItem.className = 'employee-item';
+
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.value = name;
+                nameInput.disabled = true;
+
+                const idInput = document.createElement('input');
+                idInput.type = 'text';
+                idInput.value = id;
+                idInput.disabled = true;
+
+                const departmentInput = document.createElement('input');
+                departmentInput.type = 'text';
+                departmentInput.value = department;
+                departmentInput.disabled = true;
+
+                const addressInput = document.createElement('input');
+                addressInput.type = 'text';
+                addressInput.value = address;
+                addressInput.disabled = true;
+
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.addEventListener('click', () => {
+                    nameInput.disabled = false;
+                    idInput.disabled = false;
+                    departmentInput.disabled = false;
+                    addressInput.disabled = false;
+                });
+
+                const updateButton = document.createElement('button');
+                updateButton.textContent = 'Update';
+                updateButton.addEventListener('click', () => {
+                    nameInput.disabled = true;
+                    idInput.disabled = true;
+                    departmentInput.disabled = true;
+                    addressInput.disabled = true;
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', () => {
+                    employeeList.removeChild(employeeItem);
+                });
+
+                employeeItem.appendChild(nameInput);
+                employeeItem.appendChild(idInput);
+                employeeItem.appendChild(departmentInput);
+                employeeItem.appendChild(addressInput);
+                employeeItem.appendChild(editButton);
+                employeeItem.appendChild(updateButton);
+                employeeItem.appendChild(deleteButton);
+
+                employeeList.appendChild(employeeItem);
+
+                employeeForm.reset();
+            } else {
+                alert('Please fill out all fields.');
+            }
+        });
+    </script>
+</body>
+</html>

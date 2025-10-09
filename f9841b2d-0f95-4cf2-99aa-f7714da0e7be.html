@@ -1,0 +1,132 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Pong Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid #fff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="pongCanvas" width="800" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById("pongCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const paddleWidth = 10;
+        const paddleHeight = 100;
+        const ballRadius = 10;
+
+        const player1 = { x: 0, y: canvas.height / 2 - paddleHeight / 2, score: 0 };
+        const player2 = { x: canvas.width - paddleWidth, y: canvas.height / 2 - paddleHeight / 2, score: 0 };
+
+        const ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            dx: 4 * (Math.random() > 0.5 ? 1 : -1),
+            dy: 4 * (Math.random() > 0.5 ? 1 : -1),
+        };
+
+        const keys = { w: false, s: false, ArrowUp: false, ArrowDown: false };
+
+        function drawPaddle(x, y) {
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(x, y, paddleWidth, paddleHeight);
+        }
+
+        function drawBall() {
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "#fff";
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawScores() {
+            ctx.font = "20px Arial";
+            ctx.fillText(`Player 1: ${player1.score}`, 20, 20);
+            ctx.fillText(`Player 2: ${player2.score}`, canvas.width - 140, 20);
+        }
+
+        function movePaddles() {
+            if (keys.w && player1.y > 0) player1.y -= 6;
+            if (keys.s && player1.y < canvas.height - paddleHeight) player1.y += 6;
+            if (keys.ArrowUp && player2.y > 0) player2.y -= 6;
+            if (keys.ArrowDown && player2.y < canvas.height - paddleHeight) player2.y += 6;
+        }
+
+        function moveBall() {
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            if (ball.y + ballRadius > canvas.height || ball.y - ballRadius < 0) {
+                ball.dy *= -1;
+            }
+
+            if (
+                (ball.x - ballRadius < player1.x + paddleWidth &&
+                    ball.y > player1.y &&
+                    ball.y < player1.y + paddleHeight) ||
+                (ball.x + ballRadius > player2.x &&
+                    ball.y > player2.y &&
+                    ball.y < player2.y + paddleHeight)
+            ) {
+                ball.dx *= -1;
+            }
+
+            if (ball.x - ballRadius < 0) {
+                player2.score++;
+                resetBall();
+            }
+
+            if (ball.x + ballRadius > canvas.width) {
+                player1.score++;
+                resetBall();
+            }
+        }
+
+        function resetBall() {
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height / 2;
+            ball.dx = 4 * (Math.random() > 0.5 ? 1 : -1);
+            ball.dy = 4 * (Math.random() > 0.5 ? 1 : -1);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPaddle(player1.x, player1.y);
+            drawPaddle(player2.x, player2.y);
+            drawBall();
+            drawScores();
+            movePaddles();
+            moveBall();
+        }
+
+        document.addEventListener("keydown", (e) => {
+            keys[e.key] = true;
+        });
+
+        document.addEventListener("keyup", (e) => {
+            keys[e.key] = false;
+        });
+
+        setInterval(draw, 1000 / 60);
+    </script>
+</body>
+</html>
+```

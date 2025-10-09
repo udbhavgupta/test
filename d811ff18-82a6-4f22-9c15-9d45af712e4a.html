@@ -1,0 +1,140 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Pong Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+        canvas {
+            display: block;
+            margin: auto;
+            background: #222;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = 800;
+        canvas.height = 600;
+
+        const paddleWidth = 10;
+        const paddleHeight = 100;
+        const ballSize = 10;
+
+        let leftPaddleY = canvas.height / 2 - paddleHeight / 2;
+        let rightPaddleY = canvas.height / 2 - paddleHeight / 2;
+        let ballX = canvas.width / 2;
+        let ballY = canvas.height / 2;
+        let ballSpeedX = 4;
+        let ballSpeedY = 4;
+
+        const paddleSpeed = 6;
+        let leftPaddleUp = false;
+        let leftPaddleDown = false;
+        let rightPaddleUp = false;
+        let rightPaddleDown = false;
+
+        function drawRect(x, y, width, height, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, width, height);
+        }
+
+        function drawCircle(x, y, radius, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawNet() {
+            for (let i = 0; i < canvas.height; i += 20) {
+                drawRect(canvas.width / 2 - 1, i, 2, 10, 'white');
+            }
+        }
+
+        function movePaddles() {
+            if (leftPaddleUp && leftPaddleY > 0) {
+                leftPaddleY -= paddleSpeed;
+            }
+            if (leftPaddleDown && leftPaddleY < canvas.height - paddleHeight) {
+                leftPaddleY += paddleSpeed;
+            }
+            if (rightPaddleUp && rightPaddleY > 0) {
+                rightPaddleY -= paddleSpeed;
+            }
+            if (rightPaddleDown && rightPaddleY < canvas.height - paddleHeight) {
+                rightPaddleY += paddleSpeed;
+            }
+        }
+
+        function moveBall() {
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+
+            if (ballY <= 0 || ballY >= canvas.height) {
+                ballSpeedY = -ballSpeedY;
+            }
+
+            if (ballX <= paddleWidth && ballY >= leftPaddleY && ballY <= leftPaddleY + paddleHeight) {
+                ballSpeedX = -ballSpeedX;
+            }
+
+            if (ballX >= canvas.width - paddleWidth && ballY >= rightPaddleY && ballY <= rightPaddleY + paddleHeight) {
+                ballSpeedX = -ballSpeedX;
+            }
+
+            if (ballX < 0 || ballX > canvas.width) {
+                resetBall();
+            }
+        }
+
+        function resetBall() {
+            ballX = canvas.width / 2;
+            ballY = canvas.height / 2;
+            ballSpeedX = -ballSpeedX;
+        }
+
+        function draw() {
+            drawRect(0, 0, canvas.width, canvas.height, 'black');
+            drawNet();
+            drawRect(0, leftPaddleY, paddleWidth, paddleHeight, 'white');
+            drawRect(canvas.width - paddleWidth, rightPaddleY, paddleWidth, paddleHeight, 'white');
+            drawCircle(ballX, ballY, ballSize, 'white');
+        }
+
+        function gameLoop() {
+            movePaddles();
+            moveBall();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'w') leftPaddleUp = true;
+            if (e.key === 's') leftPaddleDown = true;
+            if (e.key === 'ArrowUp') rightPaddleUp = true;
+            if (e.key === 'ArrowDown') rightPaddleDown = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.key === 'w') leftPaddleUp = false;
+            if (e.key === 's') leftPaddleDown = false;
+            if (e.key === 'ArrowUp') rightPaddleUp = false;
+            if (e.key === 'ArrowDown') rightPaddleDown = false;
+        });
+
+        gameLoop();
+    </script>
+</body>
+</html>
+```

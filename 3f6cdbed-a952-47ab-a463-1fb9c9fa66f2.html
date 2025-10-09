@@ -1,0 +1,150 @@
+<html>
+<head>
+    <title>Ping Pong Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Set canvas dimensions
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const paddleWidth = 10;
+        const paddleHeight = 100;
+        const ballSize = 10;
+
+        let paddleA = {
+            x: 20,
+            y: canvas.height / 2 - paddleHeight / 2,
+            dy: 0
+        };
+
+        let paddleB = {
+            x: canvas.width - 30,
+            y: canvas.height / 2 - paddleHeight / 2,
+            dy: 0
+        };
+
+        let ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            dx: 4,
+            dy: 4
+        };
+
+        let scoreA = 0;
+        let scoreB = 0;
+
+        function drawPaddle(paddle) {
+            ctx.fillStyle = "white";
+            ctx.fillRect(paddle.x, paddle.y, paddleWidth, paddleHeight);
+        }
+
+        function drawBall() {
+            ctx.fillStyle = "white";
+            ctx.fillRect(ball.x, ball.y, ballSize, ballSize);
+        }
+
+        function drawScores() {
+            ctx.fillStyle = "white";
+            ctx.font = "30px Arial";
+            ctx.fillText(scoreA, canvas.width / 4, 50);
+            ctx.fillText(scoreB, (canvas.width * 3) / 4, 50);
+        }
+
+        function updatePaddle(paddle) {
+            paddle.y += paddle.dy;
+            if (paddle.y < 0) paddle.y = 0;
+            if (paddle.y > canvas.height - paddleHeight) paddle.y = canvas.height - paddleHeight;
+        }
+
+        function updateBall() {
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // Ball collision with top and bottom
+            if (ball.y <= 0 || ball.y >= canvas.height - ballSize) {
+                ball.dy *= -1;
+            }
+
+            // Ball collision with paddles
+            if (
+                ball.x <= paddleA.x + paddleWidth &&
+                ball.y >= paddleA.y &&
+                ball.y <= paddleA.y + paddleHeight
+            ) {
+                ball.dx *= -1;
+                ball.x = paddleA.x + paddleWidth; // Prevent sticking
+            }
+
+            if (
+                ball.x >= paddleB.x - ballSize &&
+                ball.y >= paddleB.y &&
+                ball.y <= paddleB.y + paddleHeight
+            ) {
+                ball.dx *= -1;
+                ball.x = paddleB.x - ballSize; // Prevent sticking
+            }
+
+            // Ball out of bounds
+            if (ball.x < 0) {
+                scoreB++;
+                resetBall();
+            }
+
+            if (ball.x > canvas.width) {
+                scoreA++;
+                resetBall();
+            }
+        }
+
+        function resetBall() {
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height / 2;
+            ball.dx *= -1;
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawPaddle(paddleA);
+            drawPaddle(paddleB);
+            drawBall();
+            drawScores();
+
+            updatePaddle(paddleA);
+            updatePaddle(paddleB);
+            updateBall();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "w") paddleA.dy = -6;
+            if (e.key === "s") paddleA.dy = 6;
+            if (e.key === "ArrowUp") paddleB.dy = -6;
+            if (e.key === "ArrowDown") paddleB.dy = 6;
+        });
+
+        window.addEventListener("keyup", (e) => {
+            if (e.key === "w" || e.key === "s") paddleA.dy = 0;
+            if (e.key === "ArrowUp" || e.key === "ArrowDown") paddleB.dy = 0;
+        });
+
+        gameLoop();
+    </script>
+</body>
+</html>

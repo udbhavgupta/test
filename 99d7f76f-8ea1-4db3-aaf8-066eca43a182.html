@@ -1,0 +1,45 @@
+```python
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            return
+        current = self.head
+        while current.next:
+            current = current.next
+        current.next = new_node
+
+    def print_list(self):
+        current = self.head
+        while current:
+            print(current.data, end=" -> ")
+            current = current.next
+        print("None")
+
+    def reverse(self):
+        prev = None
+        current = self.head
+        while current:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+        self.head = prev
+```
+
+Review for improvements:
+1. The code is functional and correctly reverses a linked list.
+2. The `reverse` method is efficient and uses an iterative approach, which is optimal for reversing a linked list.
+3. The `print_list` method provides a clear way to visualize the linked list before and after reversal.
+4. The code is clean and adheres to Python conventions.
+
+No improvements are necessary as the code is already optimal and functional.

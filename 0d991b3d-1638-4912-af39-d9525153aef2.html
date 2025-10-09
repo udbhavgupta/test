@@ -1,0 +1,35 @@
+Here is the Python script again for your reference:
+
+```python
+# Python script to calculate the most financially valuable opportunities for an enterprise
+
+def calculate_financial_opportunities(opportunities):
+    """
+    Calculate the most financially valuable opportunities.
+    :param opportunities: List of dictionaries containing 'name' and 'value' of opportunities.
+    :return: List of top 3 opportunities sorted by value.
+    """
+    # Sort opportunities by their financial value in descending order
+    sorted_opportunities = sorted(opportunities, key=lambda x: x['value'], reverse=True)
+    # Return the top 3 opportunities
+    return sorted_opportunities[:3]
+
+# Example opportunities data
+opportunities = [
+    {'name': 'Opportunity A', 'value': 50000},
+    {'name': 'Opportunity B', 'value': 75000},
+    {'name': 'Opportunity C', 'value': 30000},
+    {'name': 'Opportunity D', 'value': 100000},
+    {'name': 'Opportunity E', 'value': 45000},
+]
+
+# Calculate top opportunities
+top_opportunities = calculate_financial_opportunities(opportunities)
+
+# Print the results
+print("Top Financially Valuable Opportunities:")
+for opp in top_opportunities:
+    print(f"{opp['name']}: ${opp['value']}")
+```
+
+Save this code in a `.py` file and run it using Python. It will output the top 3 financially valuable opportunities based on the example data provided.

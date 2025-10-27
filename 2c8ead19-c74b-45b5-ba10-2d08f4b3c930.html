@@ -1,0 +1,103 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Translation API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        textarea, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Language Translation API</h1>
+    <div class="container">
+        <label for="text">Enter Text to Translate:</label>
+        <textarea id="text" rows="4" placeholder="Type your text here..."></textarea>
+
+        <label for="language">Select Language:</label>
+        <select id="language">
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+            <option value="ja">Japanese</option>
+        </select>
+
+        <button onclick="translateText()">Translate</button>
+
+        <div id="output" class="output" style="display: none;"></div>
+    </div>
+
+    <script>
+        function translateText() {
+            const text = document.getElementById('text').value.trim();
+            const language = document.getElementById('language').value;
+            const outputDiv = document.getElementById('output');
+
+            if (!text) {
+                alert('Please enter some text to translate.');
+                return;
+            }
+
+            // Mock translation logic
+            const translations = {
+                es: "Traducción al español: " + text,
+                fr: "Traduction en français: " + text,
+                de: "Übersetzung ins Deutsche: " + text,
+                it: "Traduzione in italiano: " + text,
+                ja: "日本語への翻訳: " + text
+            };
+
+            const translatedText = translations[language] || "Translation not available.";
+            outputDiv.style.display = 'block';
+            outputDiv.textContent = translatedText;
+        }
+    </script>
+</body>
+</html>
+```

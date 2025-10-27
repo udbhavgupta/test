@@ -1,0 +1,140 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        .edit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .edit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Employee Management System</h1>
+    <form id="employeeForm">
+        <label for="name">Employee Name:</label>
+        <input type="text" id="name" placeholder="Enter employee name" required>
+        
+        <label for="department">Department:</label>
+        <select id="department" required>
+            <option value="">Select department</option>
+            <option value="HR">HR</option>
+            <option value="Finance">Finance</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Marketing">Marketing</option>
+        </select>
+        
+        <button type="submit">Add Employee</button>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="employeeTableBody">
+        </tbody>
+    </table>
+
+    <script>
+        const employeeForm = document.getElementById('employeeForm');
+        const employeeTableBody = document.getElementById('employeeTableBody');
+        let editIndex = null;
+
+        employeeForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const nameInput = document.getElementById('name');
+            const departmentInput = document.getElementById('department');
+            const name = nameInput.value.trim();
+            const department = departmentInput.value;
+
+            if (editIndex !== null) {
+                // Edit existing employee
+                const row = employeeTableBody.children[editIndex];
+                row.children[0].textContent = name;
+                row.children[1].textContent = department;
+                editIndex = null;
+            } else {
+                // Add new employee
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${name}</td>
+                    <td>${department}</td>
+                    <td><button class="edit-btn" onclick="editEmployee(this)">Edit</button></td>
+                `;
+                employeeTableBody.appendChild(row);
+            }
+
+            // Reset form
+            nameInput.value = '';
+            departmentInput.value = '';
+        });
+
+        function editEmployee(button) {
+            const row = button.parentElement.parentElement;
+            const name = row.children[0].textContent;
+            const department = row.children[1].textContent;
+
+            document.getElementById('name').value = name;
+            document.getElementById('department').value = department;
+
+            editIndex = Array.from(employeeTableBody.children).indexOf(row);
+        }
+    </script>
+</body>
+</html>
+```

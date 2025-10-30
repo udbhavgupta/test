@@ -1,0 +1,97 @@
+<html>
+<head>
+    <title>Monthly Project Delivery Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .add-project {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .add-project input, .add-project button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        .add-project button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .add-project button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Monthly Project Delivery Report</h1>
+    <div class="add-project">
+        <input type="text" id="projectName" placeholder="Project Name">
+        <input type="text" id="deliveryDate" placeholder="Delivery Date (YYYY-MM-DD)">
+        <input type="text" id="status" placeholder="Status (Completed/In Progress)">
+        <button onclick="addProject()">Add Project</button>
+    </div>
+    <table id="reportTable">
+        <thead>
+            <tr>
+                <th>Project Name</th>
+                <th>Delivery Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <script>
+        function addProject() {
+            const projectName = document.getElementById('projectName').value;
+            const deliveryDate = document.getElementById('deliveryDate').value;
+            const status = document.getElementById('status').value;
+
+            if (projectName && deliveryDate && status) {
+                const table = document.getElementById('reportTable').getElementsByTagName('tbody')[0];
+                const newRow = table.insertRow();
+
+                const nameCell = newRow.insertCell(0);
+                const dateCell = newRow.insertCell(1);
+                const statusCell = newRow.insertCell(2);
+
+                nameCell.textContent = projectName;
+                dateCell.textContent = deliveryDate;
+                statusCell.textContent = status;
+
+                document.getElementById('projectName').value = '';
+                document.getElementById('deliveryDate').value = '';
+                document.getElementById('status').value = '';
+            } else {
+                alert('Please fill in all fields before adding a project.');
+            }
+        }
+    </script>
+</body>
+</html>
